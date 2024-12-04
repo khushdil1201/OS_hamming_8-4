@@ -84,7 +84,7 @@ int main()
     std::vector<uint8_t> encodedBytes;
     bool isEncoded = false;
 
-    std::cout << "Enter a number: ";
+    std::cout << "Enter a number (decimal): ";
     std::cin >> number;
 
     while (true)

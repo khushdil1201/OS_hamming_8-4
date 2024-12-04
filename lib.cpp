@@ -44,68 +44,54 @@ namespace hamming8_4
         bool d3 = (encodedByte & 0b00000100) != 0;
         bool d4 = (encodedByte & 0b00000001) != 0;
 
-        bool A = p1 ^ d1 ^ d3 ^ d4 == 1;
-        bool B = p2 ^ d1 ^ d2 ^ d4 == 1;
-        bool C = p3 ^ d1 ^ d2 ^ d3 == 1;
-        bool D = p1 ^ p2 ^ p3 ^ p4 ^ d1 ^ d2 ^ d3 ^ d4 == 1;
+        // Check parity bits
+        bool A = (p1 ^ d1 ^ d3 ^ d4) == 1;
+        bool B = (p2 ^ d1 ^ d2 ^ d4) == 1;
+        bool C = (p3 ^ d1 ^ d2 ^ d3) == 1;
+        bool D = (p1 ^ p2 ^ p3 ^ p4 ^ d1 ^ d2 ^ d3 ^ d4) == 1;
 
+        // If a parity check fails but overall parity is correct, return error marker
         if ((!A || !B || !C) && D)
             return 0b10000000;
 
-        int errorPosition = 0;
-        errorPosition |= !A << 0; // 1st bit for A
-        errorPosition |= !B << 1; // 2nd bit for B
-        errorPosition |= !C << 2; // 3rd bit for C
-        errorPosition |= !D << 3; // 4th bit for D
+        // Calculate the erroneous bit position
+        int errorPosition = (!A) + (!B * 2) + (!C * 4) + (!D * 8);
+        if (errorPosition > 0) {
+            std::cout << "In byte " << byteIndex << ", a bit error was corrected at ";
 
-        if (errorPosition > 0)
-        {
-            std::cout << "In byte " << byteIndex << ", corrected error at bit ";
-
-            int bitPositions[] = {7, 5, 3, 1};
-            int bitIndex = -1;
-
-            switch (errorPosition)
-            {
+            switch (errorPosition) {
+                case 8:
+                    std::cout << "bit 2." << std::endl;
+                    break;
+                case 12:
+                    std::cout << "bit 4." << std::endl;
+                    break;
+                case 10:
+                    std::cout << "bit 6." << std::endl;
+                    break;
+                case 9:
+                    std::cout << "bit 8." << std::endl;
+                    break;
                 case 15:
-                    bitIndex = 0;
-                    break; // A
+                    d1 ^= 1;
+                    std::cout << "bit 7." << std::endl;
+                    break;
                 case 14:
-                    bitIndex = 1;
-                    break; // B
+                    d2 ^= 1;
+                    std::cout << "bit 5." << std::endl;
+                    break;
                 case 13:
-                    bitIndex = 2;
-                    break; // C
+                    d3 ^= 1;
+                    std::cout << "bit 3." << std::endl;
+                    break;
                 case 11:
-                    bitIndex = 3;
-                    break; // D
+                    d4 ^= 1;
+                    std::cout << "bit 1." << std::endl;
+                    break;
             }
-
-            if (bitIndex >= 0)
-            {
-                switch (bitIndex)
-                {
-                    case 0:
-                        d1 ^= 1;
-                        std::cout << bitPositions[0] << ".";
-                        break;
-                    case 1:
-                        d2 ^= 1;
-                        std::cout << bitPositions[1] << ".";
-                        break;
-                    case 2:
-                        d3 ^= 1;
-                        std::cout << bitPositions[2] << ".";
-                        break;
-                    case 3:
-                        d4 ^= 1;
-                        std::cout << bitPositions[3] << ".";
-                        break;
-                }
-            }
-            std::cout << std::endl;
         }
 
+        // Reconstruct the decoded data byte
         return (d1 << 3) | (d2 << 2) | (d3 << 1) | d4;
     }
 
