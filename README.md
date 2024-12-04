@@ -1,8 +1,8 @@
-## Hamming (8,4) Encoding and Decoding Project
-# Overview
+# Hamming (8,4) Encoding and Decoding Project
+## Overview
 This project implements the Hamming (8,4) code, a method for error detection and correction. It encodes 4 bits of data into 8 bits by adding parity bits. The program supports encoding, decoding, and parity testing, enabling detection and correction of single-bit errors.
 
-# Project Structure
+## Project Structure
 The project consists of the following files:
 
 lib.h
@@ -15,7 +15,7 @@ CMakeLists.txt
 Configuration file to build the project using CMake.
 
 
-# Functionalities
+## Functionalities
 
 Encoding
 Converts a user-provided number into a binary sequence, then encodes it using Hamming (8,4).
