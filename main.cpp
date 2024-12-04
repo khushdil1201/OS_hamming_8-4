@@ -8,6 +8,7 @@ void displayCommands()
     std::cout << "\n1. Encode" << std::endl;
     std::cout << "2. Decode" << std::endl;
     std::cout << "3. Odd parity test" << std::endl;
+    std::cout << "Choose a command: ";
 }
 
 std::vector<uint8_t> convertToBytes(const std::string &binaryStr)
